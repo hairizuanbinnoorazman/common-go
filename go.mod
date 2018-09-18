@@ -12,6 +12,8 @@ require (
 	github.com/jinzhu/now v0.0.0-20180511015916-ed742868f2ae // indirect
 	github.com/lib/pq v1.0.0 // indirect
 	github.com/mattn/go-sqlite3 v1.9.0 // indirect
+	github.com/sendgrid/rest v2.4.1+incompatible // indirect
+	github.com/sendgrid/sendgrid-go v3.4.1+incompatible
 	golang.org/x/crypto v0.0.0-20180910181607-0e37d006457b
 	google.golang.org/appengine v1.1.0 // indirect
 )
