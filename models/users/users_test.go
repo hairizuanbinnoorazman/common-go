@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hairizuanbinnoorazman/common-go/models"
+	"github.com/hairizuanbinnoorazman/common-go/models/users"
 )
 
 func TestNewUser(t *testing.T) {
@@ -19,14 +19,14 @@ func TestNewUser(t *testing.T) {
 	}
 
 	cases := []testCase{
-		{TestName: "Empty Values", ExpectedError: models.ErrPasswordShort},
-		{TestName: "No Password", FirstName: "aaaa", LastName: "bbbb", Email: "aaaa@aa.ca", ExpectedError: models.ErrPasswordShort},
-		{TestName: "Normal Scenario", FirstName: "aaaa", LastName: "bbbb", Email: "aaaaaa@ca.ea", Password: "maskdkd1231a", ExpectedError: models.ErrPasswordInvalid},
+		{TestName: "Empty Values", ExpectedError: users.ErrPasswordShort},
+		{TestName: "No Password", FirstName: "aaaa", LastName: "bbbb", Email: "aaaa@aa.ca", ExpectedError: users.ErrPasswordShort},
+		{TestName: "Normal Scenario", FirstName: "aaaa", LastName: "bbbb", Email: "aaaaaa@ca.ea", Password: "maskdkd1231a", ExpectedError: users.ErrPasswordInvalid},
 		{TestName: "Normal Scenario", FirstName: "aaaa", LastName: "bbbb", Email: "aaaaaa@ca.ea", Password: "maskdkd1231A", ExpectedError: nil},
 	}
 
 	for _, singleCase := range cases {
-		u, errPass := models.NewUser(singleCase.FirstName, singleCase.LastName, singleCase.Email, singleCase.Password)
+		u, errPass := users.NewUser(singleCase.FirstName, singleCase.LastName, singleCase.Email, singleCase.Password)
 		if errPass != nil {
 			if singleCase.ExpectedError == nil {
 				t.Errorf("Test Name: %s Expected Output: %s Received output: %s", singleCase.TestName, "nil", errPass.Error())
@@ -78,14 +78,14 @@ func TestSignIn(t *testing.T) {
 	}
 
 	// Set a account that is validated correctly
-	u, _ := models.NewUser("aaaa", "aaavv", "aaaaa@sac.ca", "acaockoasc1mcaA")
+	u, _ := users.NewUser("aaaa", "aaavv", "aaaaa@sac.ca", "acaockoasc1mcaA")
 	u.SignIn("aaaaa@sac.ca", "acaockoasc1mcaA")
 	initialLoginTime := u.LastLoginAt.Add(-5 * time.Second)
 
 	cases := []testCase{
-		{TestName: "Empty Value", ExpectedError: models.ErrLogin},
-		{TestName: "Empty Password", LoginEmail: "aacac@caca.ac", ExpectedError: models.ErrLogin},
-		{TestName: "Wrong Password", LoginEmail: "aaaaa@sac.ca", LoginPassword: "acaockoasc2mcaA", ExpectedError: models.ErrLogin},
+		{TestName: "Empty Value", ExpectedError: users.ErrLogin},
+		{TestName: "Empty Password", LoginEmail: "aacac@caca.ac", ExpectedError: users.ErrLogin},
+		{TestName: "Wrong Password", LoginEmail: "aaaaa@sac.ca", LoginPassword: "acaockoasc2mcaA", ExpectedError: users.ErrLogin},
 		{TestName: "Normal Scenario", LoginEmail: "aaaaa@sac.ca", LoginPassword: "acaockoasc1mcaA", ExpectedError: nil},
 	}
 
@@ -119,16 +119,16 @@ func TestUserValidate(t *testing.T) {
 	}
 
 	cases := []testCase{
-		{TestName: "Zero", ExpectedError: models.ErrNameShort},
-		{TestName: "Missing Last Name", FirstName: "Lol", ExpectedError: models.ErrNameShort},
-		{TestName: "Missing First Name", LastName: "Miao", ExpectedError: models.ErrNameShort},
-		{TestName: "Email and password missing", FirstName: "Laaol", LastName: "Miao", ExpectedError: models.ErrEmailInvalid},
-		{TestName: "Email missing", FirstName: "Lolaa", LastName: "Miaaao", Password: "acac", ExpectedError: models.ErrEmailInvalid},
+		{TestName: "Zero", ExpectedError: users.ErrNameShort},
+		{TestName: "Missing Last Name", FirstName: "Lol", ExpectedError: users.ErrNameShort},
+		{TestName: "Missing First Name", LastName: "Miao", ExpectedError: users.ErrNameShort},
+		{TestName: "Email and password missing", FirstName: "Laaol", LastName: "Miao", ExpectedError: users.ErrEmailInvalid},
+		{TestName: "Email missing", FirstName: "Lolaa", LastName: "Miaaao", Password: "acac", ExpectedError: users.ErrEmailInvalid},
 		{TestName: "All Filled Up accordingly", FirstName: "Loal", LastName: "Miao", Password: "acaaaaac", Email: "aaa@aaa.aa", ExpectedError: nil},
 	}
 
 	for _, singleCase := range cases {
-		u := models.User{FirstName: singleCase.FirstName,
+		u := users.User{FirstName: singleCase.FirstName,
 			LastName: singleCase.LastName,
 			Password: singleCase.Password,
 			Email:    singleCase.Email,
@@ -148,11 +148,11 @@ func TestUserValidate(t *testing.T) {
 func TestForgetPassword(t *testing.T) {
 	type testCase struct {
 		TestName string
-		User     models.User
+		User     users.User
 	}
 
 	cases := []testCase{
-		{TestName: "Normal Scenario", User: models.User{}},
+		{TestName: "Normal Scenario", User: users.User{}},
 	}
 
 	for _, singleCase := range cases {
@@ -166,15 +166,15 @@ func TestForgetPassword(t *testing.T) {
 func TestChangePasswordFromForget(t *testing.T) {
 	type testCase struct {
 		TestName      string
-		User          models.User
+		User          users.User
 		NewPassword   string
 		ExpectedError error
 	}
 
 	cases := []testCase{
-		{TestName: "Normal Scenario", User: models.User{}, NewPassword: "aa1Aaaaaa", ExpectedError: nil},
-		{TestName: "Short Password", User: models.User{}, NewPassword: "aaaaaa", ExpectedError: models.ErrPasswordShort},
-		{TestName: "Same Password", User: models.User{Password: "aaa1Aaaaa"}, NewPassword: "aaa1Aaaaa", ExpectedError: nil},
+		{TestName: "Normal Scenario", User: users.User{}, NewPassword: "aa1Aaaaaa", ExpectedError: nil},
+		{TestName: "Short Password", User: users.User{}, NewPassword: "aaaaaa", ExpectedError: users.ErrPasswordShort},
+		{TestName: "Same Password", User: users.User{Password: "aaa1Aaaaa"}, NewPassword: "aaa1Aaaaa", ExpectedError: nil},
 	}
 
 	for _, singleCase := range cases {
@@ -201,11 +201,11 @@ func TestChangePassword(t *testing.T) {
 
 	cases := []testCase{
 		{TestName: "Normal Scenario", OldPassword: "a1Aaaaaaa", NewPassword: "bbb1Bbbbb", ExpectedError: nil},
-		{TestName: "Same Password", OldPassword: "1aA2345678", NewPassword: "1aA2345678", ExpectedError: models.ErrSamePassword},
+		{TestName: "Same Password", OldPassword: "1aA2345678", NewPassword: "1aA2345678", ExpectedError: users.ErrSamePassword},
 	}
 
 	for _, singleCase := range cases {
-		user, _ := models.NewUser("aaaa", "aaaa", "aaaa@aa.aa", singleCase.OldPassword)
+		user, _ := users.NewUser("aaaa", "aaaa", "aaaa@aa.aa", singleCase.OldPassword)
 		err := user.ChangePassword(singleCase.NewPassword)
 		if err == nil && err != singleCase.ExpectedError {
 			t.Errorf("Test Name: %s Expected Output: %s Received output: %s", singleCase.TestName, singleCase.ExpectedError.Error(), "nil")
@@ -220,11 +220,11 @@ func TestChangePassword(t *testing.T) {
 func TestReactivateToken(t *testing.T) {
 	type testCase struct {
 		TestName string
-		User     models.User
+		User     users.User
 	}
 
 	cases := []testCase{
-		{TestName: "Common Scenario", User: models.User{}},
+		{TestName: "Common Scenario", User: users.User{}},
 	}
 
 	for _, singleCase := range cases {
@@ -245,15 +245,15 @@ func TestReactivateToken(t *testing.T) {
 func TestActivate(t *testing.T) {
 	type testCase struct {
 		TestName        string
-		User            models.User
+		User            users.User
 		ActivationToken string
 		ExpectedOutput  bool
 		ExpectedError   error
 	}
 
 	cases := []testCase{
-		{TestName: "Normal Scenario", User: models.User{ActivationToken: "abc"}, ActivationToken: "abc", ExpectedOutput: true, ExpectedError: nil},
-		{TestName: "Wrong Token", User: models.User{ActivationToken: "abc123"}, ActivationToken: "abc", ExpectedOutput: false, ExpectedError: models.ErrActivationTokenInvalid},
+		{TestName: "Normal Scenario", User: users.User{ActivationToken: "abc"}, ActivationToken: "abc", ExpectedOutput: true, ExpectedError: nil},
+		{TestName: "Wrong Token", User: users.User{ActivationToken: "abc123"}, ActivationToken: "abc", ExpectedOutput: false, ExpectedError: users.ErrActivationTokenInvalid},
 	}
 
 	for _, singleCase := range cases {
