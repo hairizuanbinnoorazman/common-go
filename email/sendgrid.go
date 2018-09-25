@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/sendgrid/sendgrid-go"
-	"github.com/sendgrid/sendgrid-go/helpers/mail"
+	sendgrid "github.com/sendgrid/sendgrid-go"
+	mail "github.com/sendgrid/sendgrid-go/helpers/mail"
 )
 
 type SendGrid struct {
