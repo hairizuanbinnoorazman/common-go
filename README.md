@@ -13,6 +13,9 @@ Checklist of items to cover:
   - [ ] sendgrid
   - [ ] mailgun
   - [ ] gmail
+- Payments
+  - [ ] sendgrid
+  - [ ] braintree
 - Models
   - [x] Users (with email + pw)
   - [ ] Social Users
